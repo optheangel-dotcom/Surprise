@@ -1,0 +1,196 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Para ti 🌸</title>
+<style>
+  :root{
+    --noche: #0b1026;
+    --noche-profunda: #050714;
+    --flor: #ff8fab;
+    --flor-clara: #ffd6e0;
+    --oro: #f4c95d;
+    --tronco: #6b4636;
+    --texto: #f2ecf6;
+  }
+
+  * { box-sizing: border-box; }
+
+  html, body {
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    background: radial-gradient(ellipse at 50% 20%, var(--noche) 0%, var(--noche-profunda) 75%);
+    overflow: hidden;
+    font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
+  }
+
+  #escena {
+    position: relative;
+    width: 100vw;
+    height: 100vh;
+  }
+
+  canvas {
+    position: absolute;
+    top: 0;
+    left: 0;
+    display: block;
+  }
+
+  #controles {
+    position: absolute;
+    top: 22px;
+    right: 24px;
+    z-index: 5;
+  }
+
+  #nuevoArbol {
+    background: rgba(244, 201, 93, 0.08);
+    border: 1px solid rgba(244, 201, 93, 0.4);
+    color: var(--oro);
+    font-family: Georgia, serif;
+    font-size: 1.1rem;
+    line-height: 1;
+    width: 40px;
+    height: 40px;
+    border-radius: 999px;
+    cursor: pointer;
+    transition: background 0.3s ease, border-color 0.3s ease, transform 0.4s ease;
+  }
+
+  #nuevoArbol:hover {
+    background: rgba(244, 201, 93, 0.18);
+    border-color: var(--oro);
+    transform: rotate(45deg);
+  }
+</style>
+</head>
+<body>
+
+<div id="escena">
+  <canvas id="cielo"></canvas>
+  <canvas id="arbol"></canvas>
+  <div id="controles">
+    <button id="nuevoArbol" title="Generar otro árbol" aria-label="Generar otro árbol">↻</button>
+  </div>
+</div>
+
+<script>
+(function () {
+  const cieloCanvas = document.getElementById('cielo');
+  const arbolCanvas = document.getElementById('arbol');
+  const cieloCtx = cieloCanvas.getContext('2d');
+  const arbolCtx = arbolCanvas.getContext('2d');
+  const botonNuevo = document.getElementById('nuevoArbol');
+
+  const COLORES_FLOR = ['#ff8fab', '#ff5d8f', '#ffd6e0', '#ffffff', '#c9a7ff'];
+
+  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+  let w, h;
+
+  function ajustarTamano() {
+    w = window.innerWidth;
+    h = window.innerHeight;
+    [cieloCanvas, arbolCanvas].forEach(c => {
+      c.width = w * dpr;
+      c.height = h * dpr;
+      c.style.width = w + 'px';
+      c.style.height = h + 'px';
+    });
+    cieloCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    arbolCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function dibujarCielo() {
+    cieloCtx.clearRect(0, 0, w, h);
+    const cantidad = Math.floor((w * h) / 9000);
+    for (let i = 0; i < cantidad; i++) {
+      const x = Math.random() * w;
+      const y = Math.random() * h * 0.75;
+      const r = Math.random() * 1.3 + 0.2;
+      cieloCtx.fillStyle = `rgba(255,255,255,${Math.random() * 0.6 + 0.2})`;
+      cieloCtx.beginPath();
+      cieloCtx.arc(x, y, r, 0, Math.PI * 2);
+      cieloCtx.fill();
+    }
+  }
+
+  // --- Construir el árbol como una lista de ramas (para animarlas en orden) ---
+  function construirRamas(x, y, angulo, longitud, ramas) {
+    if (longitud <= 5) return;
+
+    const x2 = x + Math.cos(angulo) * longitud;
+    const y2 = y - Math.sin(angulo) * longitud;
+
+    ramas.push({
+      x1: x, y1: y, x2, y2,
+      grosor: Math.max(1, longitud / 9),
+      esFlor: longitud < 20
+    });
+
+    const anguloVar = (Math.random() * 15 + 15) * Math.PI / 180;
+    const reduccion = Math.random() * 5 + 10;
+
+    construirRamas(x2, y2, angulo - anguloVar, longitud - reduccion, ramas);
+    construirRamas(x2, y2, angulo + anguloVar, longitud - reduccion, ramas);
+  }
+
+  let ramas = [];
+  let indice = 0;
+  let animando = false;
+
+  function nuevoArbol() {
+    arbolCtx.clearRect(0, 0, w, h);
+    ramas = [];
+    const baseX = w / 2;
+    const baseY = h * 0.82;
+    const longitudInicial = Math.min(w, h) * 0.16;
+    construirRamas(baseX, baseY, Math.PI / 2, longitudInicial, ramas);
+    indice = 0;
+    animando = true;
+    requestAnimationFrame(animar);
+  }
+
+  function animar() {
+    if (!animando) return;
+
+    // Dibuja varias ramas por frame para que no tarde demasiado en árboles grandes
+    const porFrame = 3;
+    for (let i = 0; i < porFrame && indice < ramas.length; i++, indice++) {
+      const r = ramas[indice];
+      arbolCtx.beginPath();
+      arbolCtx.moveTo(r.x1, r.y1);
+      arbolCtx.lineTo(r.x2, r.y2);
+      arbolCtx.lineWidth = r.grosor;
+      arbolCtx.lineCap = 'round';
+      arbolCtx.strokeStyle = r.esFlor
+        ? COLORES_FLOR[Math.floor(Math.random() * COLORES_FLOR.length)]
+        : '#6b4636';
+      arbolCtx.stroke();
+    }
+
+    if (indice < ramas.length) {
+      requestAnimationFrame(animar);
+    } else {
+      animando = false;
+    }
+  }
+
+  window.addEventListener('resize', () => {
+    ajustarTamano();
+    dibujarCielo();
+    nuevoArbol();
+  });
+
+  botonNuevo.addEventListener('click', nuevoArbol);
+
+  ajustarTamano();
+  dibujarCielo();
+  nuevoArbol();
+})();
+</script>
+
+</body>
+</html>
