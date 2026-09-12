@@ -2,193 +2,585 @@
 <html lang="es">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Para ti 🌸</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Aurora Nocturna</title>
 <style>
   :root{
-    --noche: #0b1026;
-    --noche-profunda: #050714;
-    --flor: #ff8fab;
-    --flor-clara: #ffd6e0;
-    --oro: #f4c95d;
-    --tronco: #6b4636;
-    --texto: #f2ecf6;
+    --cielo-1: #050615;
+    --cielo-2: #0a0f2e;
+    --cielo-3: #131a3d;
+    --luna: #fff8e7;
+    --luna-halo: #ffe9b8;
+    --colina-lejos: #0c1d24;
+    --colina-cerca: #0a2b1f;
+    --cesped-1: #123d28;
+    --cesped-2: #1c5c3a;
+    --luciernaga: #d9ff9c;
   }
 
-  * { box-sizing: border-box; }
+  *{ box-sizing: border-box; }
 
-  html, body {
-    margin: 0;
-    padding: 0;
-    height: 100%;
-    background: radial-gradient(ellipse at 50% 20%, var(--noche) 0%, var(--noche-profunda) 75%);
-    overflow: hidden;
+  html, body{
+    margin:0;
+    padding:0;
+    width:100%;
+    height:100%;
+    overflow:hidden;
+    background: radial-gradient(ellipse 120% 80% at 50% -10%, var(--cielo-3) 0%, var(--cielo-2) 45%, var(--cielo-1) 100%);
     font-family: Georgia, 'Iowan Old Style', 'Times New Roman', serif;
   }
 
-  #escena {
-    position: relative;
-    width: 100vw;
-    height: 100vh;
+  #escena{
+    position:relative;
+    width:100vw;
+    height:100vh;
+    isolation:isolate;
   }
 
-  canvas {
-    position: absolute;
-    top: 0;
-    left: 0;
-    display: block;
+  canvas{
+    position:absolute;
+    inset:0;
+    display:block;
+    width:100%;
+    height:100%;
   }
 
-  #controles {
-    position: absolute;
-    top: 22px;
-    right: 24px;
-    z-index: 5;
+  #estrellas{ z-index:1; }
+  #luciernagas{ z-index:6; }
+
+  /* ---------- Aurora ---------- */
+  #auroras{
+    position:absolute;
+    inset:0;
+    z-index:2;
+    overflow:hidden;
+    mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 78%);
+    -webkit-mask-image: linear-gradient(to bottom, black 0%, black 55%, transparent 78%);
   }
 
-  #nuevoArbol {
-    background: rgba(244, 201, 93, 0.08);
-    border: 1px solid rgba(244, 201, 93, 0.4);
-    color: var(--oro);
-    font-family: Georgia, serif;
-    font-size: 1.1rem;
-    line-height: 1;
-    width: 40px;
-    height: 40px;
-    border-radius: 999px;
-    cursor: pointer;
-    transition: background 0.3s ease, border-color 0.3s ease, transform 0.4s ease;
+  .banda{
+    position:absolute;
+    top:-15%;
+    left:-25%;
+    width:150%;
+    height:58%;
+    filter: blur(30px) saturate(1.4);
+    mix-blend-mode: lighten;
+    opacity:.4;
+    will-change: transform, opacity;
+    transform-origin: 50% 0%;
   }
 
-  #nuevoArbol:hover {
-    background: rgba(244, 201, 93, 0.18);
-    border-color: var(--oro);
-    transform: rotate(45deg);
+  .banda-1{
+    background: linear-gradient(200deg, transparent 18%, #17d99a 42%, #6cffcf 55%, transparent 78%);
+    animation: ondear1 22s ease-in-out infinite, pulso 7s ease-in-out infinite;
+  }
+  .banda-2{
+    background: linear-gradient(160deg, transparent 22%, #6a6aef 45%, #a988ff 58%, transparent 82%);
+    animation: ondear2 28s ease-in-out infinite, pulso 9s ease-in-out infinite reverse;
+    top:-22%;
+  }
+  .banda-3{
+    background: linear-gradient(190deg, transparent 26%, #ff7fce 45%, #57e8a8 62%, transparent 84%);
+    animation: ondear3 34s ease-in-out infinite, pulso 11s ease-in-out infinite;
+    top:-6%;
+    opacity:.3;
+  }
+
+  @keyframes ondear1{
+    0%   { transform: translateX(-4%) skewX(-6deg) scaleY(1); }
+    50%  { transform: translateX(6%) skewX(4deg) scaleY(1.15); }
+    100% { transform: translateX(-4%) skewX(-6deg) scaleY(1); }
+  }
+  @keyframes ondear2{
+    0%   { transform: translateX(5%) skewX(8deg) scaleY(1.05); }
+    50%  { transform: translateX(-7%) skewX(-5deg) scaleY(0.95); }
+    100% { transform: translateX(5%) skewX(8deg) scaleY(1.05); }
+  }
+  @keyframes ondear3{
+    0%   { transform: translateX(-6%) skewX(3deg) scaleY(1); }
+    50%  { transform: translateX(4%) skewX(-7deg) scaleY(1.1); }
+    100% { transform: translateX(-6%) skewX(3deg) scaleY(1); }
+  }
+  @keyframes pulso{
+    0%,100% { opacity:.25; }
+    50%     { opacity:.5; }
+  }
+
+  /* ---------- Luna ---------- */
+  #luna-cont{
+    position:absolute;
+    top:8%;
+    right:12%;
+    z-index:3;
+    animation: flotar 8s ease-in-out infinite;
+    will-change: transform;
+  }
+  @keyframes flotar{
+    0%,100% { transform: translateY(0); }
+    50%     { transform: translateY(-14px); }
+  }
+
+  .luna-halo{
+    position:absolute;
+    top:50%; left:50%;
+    width: 260px; height:260px;
+    transform: translate(-50%,-50%);
+    background: radial-gradient(circle, rgba(255,233,184,.35) 0%, rgba(255,233,184,.12) 35%, transparent 70%);
+    border-radius:50%;
+    filter: blur(2px);
+  }
+
+  .luna{
+    position:relative;
+    width:110px; height:110px;
+    border-radius:50%;
+    background:
+      radial-gradient(circle at 32% 28%, rgba(255,255,255,.9), transparent 45%),
+      radial-gradient(circle at 65% 70%, rgba(220,200,160,.5), transparent 40%),
+      radial-gradient(circle at 60% 40%, var(--luna) 0%, var(--luna-halo) 70%, #f2d99a 100%);
+    box-shadow:
+      0 0 25px 6px rgba(255, 240, 200, .55),
+      0 0 70px 25px rgba(255, 233, 184, .25);
+  }
+  .luna::before, .luna::after, .luna span{
+    content:'';
+    position:absolute;
+    border-radius:50%;
+    background: rgba(180,160,120,.28);
+  }
+  .luna::before{ width:18px; height:18px; top:22px; left:26px; }
+  .luna::after{ width:12px; height:12px; top:55px; left:60px; }
+  .luna span{ width:9px; height:9px; top:70px; left:30px; display:block; }
+
+  /* ---------- Estrella fugaz ---------- */
+  .fugaz{
+    position:absolute;
+    width:2px; height:2px;
+    background:white;
+    border-radius:50%;
+    box-shadow: 0 0 6px 2px rgba(255,255,255,.8);
+    z-index:2;
+    animation: cruzar 1.4s linear forwards;
+  }
+  .fugaz::after{
+    content:'';
+    position:absolute;
+    top:0; right:0;
+    width:130px; height:1px;
+    background: linear-gradient(to left, rgba(255,255,255,.9), transparent);
+    transform-origin: right center;
+  }
+  @keyframes cruzar{
+    0%   { transform: translate(0,0); opacity:1; }
+    85%  { opacity:1; }
+    100% { transform: translate(-420px, 260px); opacity:0; }
+  }
+
+  /* ---------- Colinas ---------- */
+  .colina{
+    position:absolute;
+    left:-5%;
+    width:110%;
+    z-index:4;
+    border-radius: 50% 50% 0 0 / 100% 100% 0 0;
+  }
+  .colina-lejos{
+    bottom:-4%;
+    height:22vh;
+    background: linear-gradient(180deg, var(--colina-lejos), #081319);
+    opacity:.9;
+  }
+  .colina-cerca{
+    bottom:-8%;
+    height:16vh;
+    background: linear-gradient(180deg, var(--colina-cerca), #051a12);
+    z-index:5;
+  }
+
+  /* ---------- Cesped ---------- */
+  #cesped-base{
+    position:absolute;
+    left:0; right:0; bottom:0;
+    height:9vh;
+    background: linear-gradient(180deg, var(--cesped-2), var(--cesped-1));
+    z-index:6;
+  }
+
+  #svg-cesped{
+    position:absolute;
+    left:0; bottom:6vh;
+    width:100%;
+    height:14vh;
+    z-index:7;
+    overflow:visible;
+  }
+
+  .brizna{
+    transform-box: fill-box;
+    transform-origin: bottom center;
+    animation-name: viento;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+
+  @keyframes viento{
+    0%   { transform: rotate(calc(-1 * var(--amp))); }
+    50%  { transform: rotate(var(--amp)); }
+    100% { transform: rotate(calc(-1 * var(--amp))); }
+  }
+
+  /* ---------- Tulipanes ---------- */
+  #tulipanes{
+    position:absolute;
+    left:0; right:0;
+    bottom:6vh;
+    height:16vh;
+    z-index:8;
+    pointer-events:none;
+  }
+
+  .tulipan{
+    position:absolute;
+    bottom:0;
+    transform-box: fill-box;
+    transform-origin: bottom center;
+    animation-name: viento;
+    animation-timing-function: ease-in-out;
+    animation-iteration-count: infinite;
+    will-change: transform;
+  }
+
+  .tallo{
+    position:absolute;
+    bottom:0;
+    left:50%;
+    width:3px;
+    transform: translateX(-50%);
+    background: linear-gradient(180deg, #3d8a4e, #1f5c2f);
+    border-radius:2px;
+  }
+
+  .hoja{
+    position:absolute;
+    background: linear-gradient(140deg, #3d8a4e, #1c4a2a);
+    border-radius: 0 100% 0 100%;
+  }
+
+  .flor{
+    position:absolute;
+    left:50%;
+    transform: translateX(-50%);
+    width:22px; height:26px;
+    border-radius: 50% 50% 8% 8% / 62% 62% 15% 15%;
+    filter: drop-shadow(0 2px 3px rgba(0,0,0,.35));
+  }
+  .flor::before, .flor::after{
+    content:'';
+    position:absolute;
+    top:5px;
+    width:15px; height:21px;
+    background: inherit;
+    border-radius: 50% 50% 8% 8% / 62% 62% 15% 15%;
+    filter: brightness(0.85);
+  }
+  .flor::before{ left:-9px; transform: rotate(-26deg); z-index:-1; }
+  .flor::after{  right:-9px; transform: rotate(26deg);  z-index:-1; }
+  .flor-brillo{
+    position:absolute;
+    top:4px; left:6px;
+    width:7px; height:10px;
+    background: rgba(255,255,255,.35);
+    border-radius:50%;
+    filter: blur(1px);
+  }
+
+  /* ---------- Accesibilidad ---------- */
+  @media (prefers-reduced-motion: reduce){
+    .banda, .luna-cont, .brizna, .tulipan{ animation-duration: 60s !important; }
+  }
+
+  #firma{
+    position:absolute;
+    bottom:10px;
+    left:50%;
+    transform:translateX(-50%);
+    z-index:9;
+    color: rgba(240,240,255,.35);
+    font-size:.75rem;
+    letter-spacing:.14em;
+    text-transform:uppercase;
+    pointer-events:none;
   }
 </style>
 </head>
 <body>
 
 <div id="escena">
-  <canvas id="cielo"></canvas>
-  <canvas id="arbol"></canvas>
-  <div id="controles">
-    <button id="nuevoArbol" title="Generar otro árbol" aria-label="Generar otro árbol">↻</button>
+  <canvas id="estrellas"></canvas>
+
+  <div id="auroras">
+    <div class="banda banda-1"></div>
+    <div class="banda banda-2"></div>
+    <div class="banda banda-3"></div>
   </div>
+
+  <div id="luna-cont">
+    <div class="luna-halo"></div>
+    <div class="luna"><span></span></div>
+  </div>
+
+  <div class="colina colina-lejos"></div>
+  <div class="colina colina-cerca"></div>
+
+  <div id="cesped-base"></div>
+  <svg id="svg-cesped" preserveAspectRatio="none"></svg>
+  <div id="tulipanes"></div>
+
+  <canvas id="luciernagas"></canvas>
+
+  <div id="firma">Noche de auroras</div>
 </div>
 
 <script>
 (function () {
-  const cieloCanvas = document.getElementById('cielo');
-  const arbolCanvas = document.getElementById('arbol');
-  const cieloCtx = cieloCanvas.getContext('2d');
-  const arbolCtx = arbolCanvas.getContext('2d');
-  const botonNuevo = document.getElementById('nuevoArbol');
-
-  const COLORES_FLOR = ['#ff8fab', '#ff5d8f', '#ffd6e0', '#ffffff', '#c9a7ff'];
-
-  let dpr = Math.min(window.devicePixelRatio || 1, 2);
+  const dpr = Math.min(window.devicePixelRatio || 1, 2);
   let w, h;
+  let reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  let visible = true;
 
-  function ajustarTamano() {
+  document.addEventListener('visibilitychange', () => { visible = !document.hidden; });
+
+  /* ================= Tamaño ================= */
+  const cvEstrellas = document.getElementById('estrellas');
+  const ctxEstrellas = cvEstrellas.getContext('2d');
+  const cvLuciernagas = document.getElementById('luciernagas');
+  const ctxLuciernagas = cvLuciernagas.getContext('2d');
+
+  function ajustarCanvas(cv, ctx) {
+    cv.width = w * dpr;
+    cv.height = h * dpr;
+    ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+  }
+
+  function ajustarTodo() {
     w = window.innerWidth;
     h = window.innerHeight;
-    [cieloCanvas, arbolCanvas].forEach(c => {
-      c.width = w * dpr;
-      c.height = h * dpr;
-      c.style.width = w + 'px';
-      c.style.height = h + 'px';
-    });
-    cieloCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
-    arbolCtx.setTransform(dpr, 0, 0, dpr, 0, 0);
+    ajustarCanvas(cvEstrellas, ctxEstrellas);
+    ajustarCanvas(cvLuciernagas, ctxLuciernagas);
+    crearEstrellas();
+    generarCesped();
+    generarTulipanes();
   }
 
-  function dibujarCielo() {
-    cieloCtx.clearRect(0, 0, w, h);
-    const cantidad = Math.floor((w * h) / 9000);
+  /* ================= Estrellas ================= */
+  let estrellas = [];
+  function crearEstrellas() {
+    const cantidad = Math.floor((w * h) / 7000);
+    estrellas = [];
+    for (let i = 0; i < cantidad; i++) {
+      estrellas.push({
+        x: Math.random() * w,
+        y: Math.random() * h * 0.6,
+        r: Math.random() * 1.4 + 0.3,
+        fase: Math.random() * Math.PI * 2,
+        vel: Math.random() * 0.02 + 0.01
+      });
+    }
+  }
+
+  function dibujarEstrellas(t) {
+    ctxEstrellas.clearRect(0, 0, w, h);
+    for (const e of estrellas) {
+      const brillo = 0.5 + 0.5 * Math.sin(t * e.vel + e.fase);
+      ctxEstrellas.fillStyle = `rgba(255,255,255,${(0.25 + brillo * 0.65).toFixed(2)})`;
+      ctxEstrellas.beginPath();
+      ctxEstrellas.arc(e.x, e.y, e.r, 0, Math.PI * 2);
+      ctxEstrellas.fill();
+    }
+  }
+
+  /* ================= Estrellas fugaces ================= */
+  function lanzarFugaz() {
+    if (!visible) return;
+    const fugaz = document.createElement('div');
+    fugaz.className = 'fugaz';
+    fugaz.style.top = (Math.random() * h * 0.35) + 'px';
+    fugaz.style.left = (w * 0.6 + Math.random() * w * 0.35) + 'px';
+    document.getElementById('escena').appendChild(fugaz);
+    setTimeout(() => fugaz.remove(), 1500);
+  }
+  function programarFugaz() {
+    const espera = 4000 + Math.random() * 7000;
+    setTimeout(() => { lanzarFugaz(); programarFugaz(); }, espera);
+  }
+
+  /* ================= Cesped (SVG) ================= */
+  const svgCesped = document.getElementById('svg-cesped');
+  const NS = 'http://www.w3.org/2000/svg';
+
+  function generarCesped() {
+    svgCesped.innerHTML = '';
+    const alturaBase = h * 0.14;
+    svgCesped.setAttribute('viewBox', `0 0 ${w} ${alturaBase}`);
+
+    const cantidad = Math.min(260, Math.floor(w / 6));
     for (let i = 0; i < cantidad; i++) {
       const x = Math.random() * w;
-      const y = Math.random() * h * 0.75;
-      const r = Math.random() * 1.3 + 0.2;
-      cieloCtx.fillStyle = `rgba(255,255,255,${Math.random() * 0.6 + 0.2})`;
-      cieloCtx.beginPath();
-      cieloCtx.arc(x, y, r, 0, Math.PI * 2);
-      cieloCtx.fill();
+      const altura = alturaBase * (0.35 + Math.random() * 0.55);
+      const inclinacion = (Math.random() - 0.5) * 14;
+      const curva = document.createElementNS(NS, 'path');
+      const cx = x + inclinacion;
+      const d = `M ${x} ${alturaBase} Q ${cx} ${alturaBase - altura * 0.6} ${cx * 0.4 + x * 0.6} ${alturaBase - altura}`;
+      curva.setAttribute('d', d);
+      curva.setAttribute('stroke', Math.random() > 0.5 ? '#2f7a48' : '#1f5c34');
+      curva.setAttribute('stroke-width', (1.4 + Math.random() * 1.6).toFixed(1));
+      curva.setAttribute('fill', 'none');
+      curva.setAttribute('stroke-linecap', 'round');
+      curva.classList.add('brizna');
+      const amp = (2 + Math.random() * 5).toFixed(1);
+      const dur = (3 + Math.random() * 3).toFixed(2);
+      const delay = (-Math.random() * dur).toFixed(2);
+      curva.style.setProperty('--amp', amp + 'deg');
+      curva.style.animationDuration = dur + 's';
+      curva.style.animationDelay = delay + 's';
+      svgCesped.appendChild(curva);
     }
   }
 
-  // --- Construir el árbol como una lista de ramas (para animarlas en orden) ---
-  function construirRamas(x, y, angulo, longitud, ramas) {
-    if (longitud <= 5) return;
+  /* ================= Tulipanes ================= */
+  const contTulipanes = document.getElementById('tulipanes');
+  const COLORES_TULIPAN = ['#ff4d6d', '#ffb703', '#f72585', '#b5179e', '#ff8fab', '#f3722c', '#ffe66d', '#7209b7'];
 
-    const x2 = x + Math.cos(angulo) * longitud;
-    const y2 = y - Math.sin(angulo) * longitud;
+  function generarTulipanes() {
+    contTulipanes.innerHTML = '';
+    const cantidad = Math.max(14, Math.min(46, Math.floor(w / 42)));
+    for (let i = 0; i < cantidad; i++) {
+      const t = document.createElement('div');
+      t.className = 'tulipan';
 
-    ramas.push({
-      x1: x, y1: y, x2, y2,
-      grosor: Math.max(1, longitud / 9),
-      esFlor: longitud < 20
-    });
+      const izquierda = (Math.random() * 96 + 2);
+      const escala = 0.7 + Math.random() * 0.7;
+      const alturaTallo = (28 + Math.random() * 30) * escala;
 
-    const anguloVar = (Math.random() * 15 + 15) * Math.PI / 180;
-    const reduccion = Math.random() * 5 + 10;
+      t.style.left = izquierda + '%';
+      t.style.width = (24 * escala) + 'px';
+      t.style.height = (alturaTallo + 30 * escala) + 'px';
+      t.style.zIndex = String(Math.round(escala * 10));
 
-    construirRamas(x2, y2, angulo - anguloVar, longitud - reduccion, ramas);
-    construirRamas(x2, y2, angulo + anguloVar, longitud - reduccion, ramas);
-  }
+      const amp = (3 + Math.random() * 6).toFixed(1);
+      const dur = (3.5 + Math.random() * 3).toFixed(2);
+      const delay = (-Math.random() * dur).toFixed(2);
+      t.style.setProperty('--amp', amp + 'deg');
+      t.style.animationDuration = dur + 's';
+      t.style.animationDelay = delay + 's';
 
-  let ramas = [];
-  let indice = 0;
-  let animando = false;
+      const tallo = document.createElement('div');
+      tallo.className = 'tallo';
+      tallo.style.height = alturaTallo + 'px';
+      t.appendChild(tallo);
 
-  function nuevoArbol() {
-    arbolCtx.clearRect(0, 0, w, h);
-    ramas = [];
-    const baseX = w / 2;
-    const baseY = h * 0.82;
-    const longitudInicial = Math.min(w, h) * 0.16;
-    construirRamas(baseX, baseY, Math.PI / 2, longitudInicial, ramas);
-    indice = 0;
-    animando = true;
-    requestAnimationFrame(animar);
-  }
+      const hoja = document.createElement('div');
+      hoja.className = 'hoja';
+      const anchoHoja = 16 * escala, altoHoja = 8 * escala;
+      hoja.style.width = anchoHoja + 'px';
+      hoja.style.height = altoHoja + 'px';
+      hoja.style.left = (Math.random() > 0.5 ? -anchoHoja * 0.75 : anchoHoja * 0.1) + 'px';
+      hoja.style.bottom = (alturaTallo * 0.3) + 'px';
+      if (Math.random() > 0.5) hoja.style.transform = 'scaleX(-1)';
+      t.appendChild(hoja);
 
-  function animar() {
-    if (!animando) return;
+      const flor = document.createElement('div');
+      flor.className = 'flor';
+      const color = COLORES_TULIPAN[Math.floor(Math.random() * COLORES_TULIPAN.length)];
+      flor.style.background = `linear-gradient(160deg, ${color}, ${sombrear(color)})`;
+      flor.style.bottom = alturaTallo + 'px';
+      flor.style.width = (22 * escala) + 'px';
+      flor.style.height = (26 * escala) + 'px';
 
-    // Dibuja varias ramas por frame para que no tarde demasiado en árboles grandes
-    const porFrame = 3;
-    for (let i = 0; i < porFrame && indice < ramas.length; i++, indice++) {
-      const r = ramas[indice];
-      arbolCtx.beginPath();
-      arbolCtx.moveTo(r.x1, r.y1);
-      arbolCtx.lineTo(r.x2, r.y2);
-      arbolCtx.lineWidth = r.grosor;
-      arbolCtx.lineCap = 'round';
-      arbolCtx.strokeStyle = r.esFlor
-        ? COLORES_FLOR[Math.floor(Math.random() * COLORES_FLOR.length)]
-        : '#6b4636';
-      arbolCtx.stroke();
-    }
+      const brillo = document.createElement('div');
+      brillo.className = 'flor-brillo';
+      flor.appendChild(brillo);
 
-    if (indice < ramas.length) {
-      requestAnimationFrame(animar);
-    } else {
-      animando = false;
+      t.appendChild(flor);
+      contTulipanes.appendChild(t);
     }
   }
 
-  window.addEventListener('resize', () => {
-    ajustarTamano();
-    dibujarCielo();
-    nuevoArbol();
-  });
+  function sombrear(hex) {
+    const n = parseInt(hex.slice(1), 16);
+    const r = Math.max(0, (n >> 16) - 45);
+    const g = Math.max(0, ((n >> 8) & 0xff) - 45);
+    const b = Math.max(0, (n & 0xff) - 45);
+    return `rgb(${r},${g},${b})`;
+  }
 
-  botonNuevo.addEventListener('click', nuevoArbol);
+  /* ================= Luciérnagas ================= */
+  let luciernagas = [];
+  function crearLuciernagas() {
+    const cantidad = Math.max(14, Math.min(30, Math.floor(w / 45)));
+    luciernagas = [];
+    for (let i = 0; i < cantidad; i++) {
+      luciernagas.push({
+        x: Math.random() * w,
+        y: h * 0.55 + Math.random() * h * 0.4,
+        objX: Math.random() * w,
+        objY: h * 0.55 + Math.random() * h * 0.4,
+        vel: 0.15 + Math.random() * 0.3,
+        fase: Math.random() * Math.PI * 2,
+        parpadeo: 0.02 + Math.random() * 0.02,
+        r: 1.6 + Math.random() * 1.6
+      });
+    }
+  }
 
-  ajustarTamano();
-  dibujarCielo();
-  nuevoArbol();
+  function actualizarLuciernagas(t) {
+    ctxLuciernagas.clearRect(0, 0, w, h);
+    ctxLuciernagas.globalCompositeOperation = 'lighter';
+    for (const f of luciernagas) {
+      const dx = f.objX - f.x, dy = f.objY - f.y;
+      const dist = Math.hypot(dx, dy);
+      if (dist < 6) {
+        f.objX = Math.random() * w;
+        f.objY = h * 0.5 + Math.random() * h * 0.45;
+      } else {
+        f.x += (dx / dist) * f.vel;
+        f.y += (dy / dist) * f.vel + Math.sin(t * 0.001 + f.fase) * 0.15;
+      }
+      const brillo = 0.35 + 0.65 * Math.abs(Math.sin(t * f.parpadeo + f.fase));
+      const grad = ctxLuciernagas.createRadialGradient(f.x, f.y, 0, f.x, f.y, f.r * 6);
+      grad.addColorStop(0, `rgba(217,255,156,${0.9 * brillo})`);
+      grad.addColorStop(0.4, `rgba(180,255,120,${0.35 * brillo})`);
+      grad.addColorStop(1, 'rgba(180,255,120,0)');
+      ctxLuciernagas.fillStyle = grad;
+      ctxLuciernagas.beginPath();
+      ctxLuciernagas.arc(f.x, f.y, f.r * 6, 0, Math.PI * 2);
+      ctxLuciernagas.fill();
+
+      ctxLuciernagas.fillStyle = `rgba(255,255,240,${brillo})`;
+      ctxLuciernagas.beginPath();
+      ctxLuciernagas.arc(f.x, f.y, f.r * 0.5, 0, Math.PI * 2);
+      ctxLuciernagas.fill();
+    }
+    ctxLuciernagas.globalCompositeOperation = 'source-over';
+  }
+
+  /* ================= Bucle principal ================= */
+  function bucle(t) {
+    if (visible) {
+      dibujarEstrellas(t);
+      actualizarLuciernagas(t);
+    }
+    requestAnimationFrame(bucle);
+  }
+
+  window.addEventListener('resize', ajustarTodo);
+
+  ajustarTodo();
+  crearLuciernagas();
+  if (!reduceMotion) programarFugaz();
+  requestAnimationFrame(bucle);
 })();
 </script>
 
